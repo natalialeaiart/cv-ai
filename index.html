@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Natalja Levaskovica — AI Visual Content Creator</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --a:   #7c3aed;
+  --al:  #f3effe;
+  --ab:  #d8b4fe;
+  --t1:  #1a1228;
+  --t2:  #45405a;
+  --t3:  #9b8fb5;
+  --t4:  #5e5472;
+  --bd:  #ede8f5;
+  --bdc: #ddd6f0;
+  --bg:  #ffffff;
+  --bgc: #faf8fd;
+  --bgk: #f7f4fc;
+  --fd:  'Manrope', system-ui, sans-serif;
+  --fb:  'Inter', system-ui, sans-serif;
+}
+
+html { font-size: 13px; }
+body {
+  font-family: var(--fb);
+  line-height: 1.5;
+  color: var(--t1);
+  background: #ede8f5;
+  padding: 24px 14px 36px;
+}
+a { color: inherit; text-decoration: none; }
+
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 24px rgba(90,40,160,0.10);
+  overflow: hidden;
+}
+
+/* PRINT BAR */
+.print-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 9px 24px;
+  background: var(--bgk);
+  border-bottom: 1px solid var(--bd);
+}
+.btn {
+  padding: 5px 13px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--fb);
+  border: 1px solid var(--bdc);
+  background: #fff;
+  color: var(--t2);
+}
+.btn:hover { background: var(--al); color: var(--a); border-color: var(--ab); }
+.btn-dl {
+  border-color: var(--ab);
+  background: var(--al);
+  color: var(--a);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 13px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* HEADER */
+.header {
+  padding: 28px 32px 22px;
+  border-bottom: 1px solid var(--bd);
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+}
+.header-text { flex: 1; min-width: 0; }
+.header h1 {
+  font-family: var(--fd);
+  font-size: 23px;
+  font-weight: 800;
+  color: var(--t1);
+  letter-spacing: -0.3px;
+  margin-bottom: 2px;
+}
+.job-title {
+  font-family: var(--fd);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--a);
+  margin-bottom: 10px;
+}
+.summary {
+  font-size: 11.5px;
+  color: var(--t2);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+/* CONTACTS — simple inline row, no chips */
+.contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+.contacts a, .contacts span {
+  font-size: 11px;
+  color: var(--t2);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.contacts a:hover { color: var(--a); }
+.contacts a svg, .contacts span svg { width: 10px; height: 10px; flex-shrink: 0; fill: var(--t3); }
+
+/* PHOTO */
+.photo-wrap {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2.5px solid var(--ab);
+  box-shadow: 0 0 0 4px var(--al);
+  margin-top: 2px;
+}
+.photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* SECTION */
+.section {
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--bd);
+}
+.section:last-child { border-bottom: none; }
+.slabel {
+  font-family: var(--fd);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 12px;
+}
+
+/* EXPERTISE — inline tags, no border */
+.etags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.etag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  background: var(--bgc);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--t1);
+}
+.etag::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--a);
+  flex-shrink: 0;
+}
+
+/* TOOLS */
+.tgrid { display: flex; flex-wrap: wrap; gap: 5px; }
+.tchip {
+  padding: 3px 9px;
+  background: var(--al);
+  color: var(--a);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--ab);
+}
+
+/* EXPERIENCE */
+.exp-item {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f0ebf8;
+  margin-bottom: 18px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.exp-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.dot-col {
+  padding-top: 4px;
+  min-width: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--a);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.dot.live { background: var(--a); }
+.exp-body { flex: 1; }
+.exp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-bottom: 2px;
+}
+.exp-title {
+  font-family: var(--fd);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--t1);
+}
+.exp-dates {
+  font-size: 10.5px;
+  color: var(--t3);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.exp-co {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--a);
+  margin-bottom: 8px;
+}
+.bullets { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.bullets li {
+  font-size: 11.5px;
+  color: var(--t2);
+  line-height: 1.5;
+  padding-left: 12px;
+  position: relative;
+}
+.bullets li::before { content: "-"; position: absolute; left: 0; color: var(--t3); }
+.award {
+  margin-top: 9px;
+  padding: 6px 10px;
+  background: #fefce8;
+  border: 1px solid #fde68a;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #854d0e;
+  display: inline-block;
+}
+
+/* PROJECTS — 2-column grid */
+.proj-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.proj-card {
+  padding: 10px 12px;
+  border: 1px solid var(--bd);
+  border-radius: 7px;
+  background: var(--bgc);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.proj-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--a);
+  margin-bottom: 3px;
+}
+.proj-name {
+  font-family: var(--fd);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--t1);
+  margin-bottom: 3px;
+}
+.proj-desc {
+  font-size: 11px;
+  color: var(--t4);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.proj-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.proj-link { font-size: 11px; font-weight: 600; color: var(--a); }
+
+/* EDUCATION */
+.edu-items { display: flex; flex-direction: column; gap: 12px; }
+.edu-item { display: flex; gap: 10px; align-items: flex-start; }
+.edu-marker {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--a);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.edu-degree {
+  font-family: var(--fd);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--t1);
+  margin-bottom: 1px;
+}
+.edu-school { font-size: 11px; color: var(--t4); margin-bottom: 2px; }
+.edu-dates { font-size: 11px; font-weight: 700; color: var(--a); }
+
+/* LANGUAGES */
+.lang-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.lang-chip {
+  padding: 5px 12px;
+  border: 1px solid var(--bdc);
+  border-radius: 5px;
+  font-size: 11.5px;
+  color: var(--t2);
+  background: var(--bgk);
+}
+.lang-chip strong { color: var(--t1); font-weight: 700; }
+
+/* ADDITIONAL / FOOTER */
+.add-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.add-chip {
+  padding: 4px 10px;
+  border: 1px solid var(--bdc);
+  border-radius: 16px;
+  font-size: 11px;
+  color: var(--t2);
+  background: var(--bgk);
+}
+.footer-note { font-size: 11.5px; color: var(--t4); line-height: 1.6; }
+.footer-note strong { color: var(--t1); }
+.hr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 9px;
+  padding: 6px 12px;
+  background: var(--al);
+  border: 1px solid var(--ab);
+  border-radius: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--a);
+}
+
+/* TWO-COL LAYOUT for bottom sections */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 28px;
+}
+
+/* PRINT */
+@media print {
+  @page { size: A4; margin: 11mm 10mm; }
+  html { font-size: 11.5px; }
+  body { background: white; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { max-width: 100%; box-shadow: none; border-radius: 0; }
+  .print-bar { display: none; }
+  .section, .exp-item, .proj-card, .edu-item, .header {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+@media (max-width: 580px) {
+  body { padding: 0; }
+  .page { border-radius: 0; }
+  .header { flex-direction: column-reverse; align-items: center; padding: 20px 18px 16px; }
+  .section, .print-bar { padding-left: 18px; padding-right: 18px; }
+  .proj-grid, .two-col { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- PRINT BAR -->
+  <div class="print-bar">
+    <button class="btn" onclick="window.print()">Print CV</button>
+    <button class="btn-dl" id="btn-pdf">Download PDF</button>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-text">
+      <h1>Natalja Levaskovica</h1>
+      <div class="job-title">AI Visual Content Creator &amp; Generative AI Specialist</div>
+      <p class="summary">
+        Generative AI specialist and visual storyteller with hands-on experience in AI video production,
+        system prompt engineering, character-consistent image generation, AI music, and workflow
+        automation. Transitioned from 12+ years in HR to AI content creation. Competed internationally, worked full-time at an AI startup, and built a
+        client practice across industries.
+      </p>
+      <div class="contacts">
+        <a id="email-chip" href="mailto:natalja.levaskovica@inbox.lv">
+          <svg viewBox="0 0 16 16"><path d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2 0v.217l4 2.667 4-2.667V4H4zm8 1.783L8 8.45 4 5.783V12h8V5.783z"/></svg>
+          natalja.levaskovica@inbox.lv
+        </a>
+        <a href="tel:+37126106616">
+          <svg viewBox="0 0 16 16"><path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328z"/></svg>
+          +371 26 106 616
+        </a>
+        <a href="https://linkedin.com/in/natalja-levaskovica" target="_blank">
+          <svg viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+          linkedin.com/in/natalja-levaskovica
+        </a>
+        <a href="https://portfolio-nataliale.vercel.app/" target="_blank">
+          <svg viewBox="0 0 16 16"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z"/></svg>
+          Portfolio
+        </a>
+        <span>
+          <svg viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+          Riga, Latvia
+        </span>
+      </div>
+    </div>
+    <div class="photo-wrap">
+      <img src="photo.jpg" alt="Natalja Levaskovica">
+    </div>
+  </div>
+
+  <!-- CORE EXPERTISE -->
+  <div class="section">
+    <div class="slabel">Core Expertise</div>
+    <div class="etags">
+      <span class="etag">AI Video Production</span>
+      <span class="etag">Prompt &amp; System Prompt Engineering</span>
+      <span class="etag">Character Consistency</span>
+      <span class="etag">AI Music &amp; Audio</span>
+      <span class="etag">Automation &amp; Bots</span>
+      <span class="etag">Visual Storytelling</span>
+    </div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="section">
+    <div class="slabel">AI Tools &amp; Software</div>
+    <div class="tgrid">
+      <span class="tchip">Kling</span>
+      <span class="tchip">Veo</span>
+      <span class="tchip">Seedream</span>
+      <span class="tchip">Nano Banana</span>
+      <span class="tchip">Seedance</span>
+      <span class="tchip">Flux</span>
+      <span class="tchip">GPT-Image</span>
+      <span class="tchip">Suno</span>
+      <span class="tchip">ElevenLabs</span>
+      <span class="tchip">MMAudio</span>
+      <span class="tchip">Filmora</span>
+      <span class="tchip">CapCut</span>
+      <span class="tchip">PicsArt</span>
+      <span class="tchip">Python (AI-assisted)</span>
+      <span class="tchip">n8n</span>
+      <span class="tchip">ChatGPT</span>
+      <span class="tchip">Claude</span>
+      <span class="tchip">Gemini</span>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section">
+    <div class="slabel">Experience</div>
+
+    <div class="exp-item">
+      <div class="dot-col"><div class="dot"></div></div>
+      <div class="exp-body">
+        <div class="exp-head">
+          <span class="exp-title">AI Visual Content Creator &amp; Prompt Engineer</span>
+          <span class="exp-dates">Oct 2025 — Feb 2026</span>
+        </div>
+        <div class="exp-co">AI Startup (Social App) · Cyprus · Full-time</div>
+        <ul class="bullets">
+          <li>Designed and maintained system prompts for character-consistent, script-based visual content at scale.</li>
+          <li>Integrated real user photos into AI-generated scenes, maintaining visual consistency across high volumes of automated output.</li>
+          <li>Refined prompt reliability and quality benchmarks for the platform's personalized imagery pipeline.</li>
+          <li>Collaborated cross-functionally in an early-stage product environment on creative and technical workflow decisions.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="dot-col"><div class="dot live"></div></div>
+      <div class="exp-body">
+        <div class="exp-head">
+          <span class="exp-title">Generative AI Specialist · Freelance</span>
+          <span class="exp-dates">Nov 2024 — Present</span>
+        </div>
+        <div class="exp-co">Various Clients · Independent</div>
+        <ul class="bullets">
+          <li>Creating AI-generated visual, video, and music content for advertising materials distributed across online marketplaces and social media platforms.</li>
+          <li>Designing and refining advanced prompts and system prompts for image, video, and character generation; integrating visuals, motion, text, and audio into cohesive storytelling formats.</li>
+          <li>Developing and maintaining consistent AI character models to ensure visual identity stability across scenes, formats, and platforms.</li>
+          <li>Building AI-assisted automation workflows in n8n and Python; developing Telegram bots for structured content delivery and AI-powered image generation via API integration.</li>
+          <li>Editing and enhancing visuals and videos using Filmora, CapCut, and Lightroom; layer-based compositing and retouching with PicsArt.</li>
+        </ul>
+        <div class="award">Kling AI Ad Master Dual Challenges — 3rd Place (Popularity Award), March 2025</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="section">
+    <div class="slabel">Selected Projects</div>
+    <div class="proj-grid">
+
+      <div class="proj-card">
+        <div class="proj-tag">Portfolio</div>
+        <div class="proj-name">AI Portfolio</div>
+        <div class="proj-desc">Built with AI-assisted development — no prior programming background. Intentional design, fully self-managed.</div>
+        <div class="proj-links">
+          <a class="proj-link" href="https://portfolio-nataliale.vercel.app/" target="_blank">portfolio-nataliale.vercel.app</a>
+          <a class="proj-link" href="https://github.com/natalialeaiart" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-tag">Bots · Automation</div>
+        <div class="proj-name">AI News Telegram Bots</div>
+        <div class="proj-desc">Two automated bots delivering daily AI news, built with Python and GitHub Actions.</div>
+        <div class="proj-links">
+          <a class="proj-link" href="https://t.me/creative_ai_news" target="_blank">@creative_ai_news</a>
+          <a class="proj-link" href="https://t.me/ai_agents_daily" target="_blank">@ai_agents_daily</a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-tag">AI Tools</div>
+        <div class="proj-name">Custom GPTs</div>
+        <div class="proj-desc">Free tools for visual creators: Carousel Creative Director GPT and Cinematic Scene Builder GPT.</div>
+        <div class="proj-links">
+          <a class="proj-link" href="https://chatgpt.com/g/g-6a0c1d49fd8881918612b56af8e14943-ai-carousel-creative-director" target="_blank">Carousel GPT</a>
+          <a class="proj-link" href="https://chatgpt.com/g/g-69ac4bfacfac8191b31e3e6057b27150-cinematic-scene-builder" target="_blank">Scene Builder GPT</a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-tag">Guide</div>
+        <div class="proj-name">AI Outpainting Guide</div>
+        <div class="proj-desc">Practical technique guide for visual creators on AI outpainting workflows.</div>
+        <div class="proj-links">
+          <a class="proj-link" href="https://ai-outpainting-guide.vercel.app/" target="_blank">ai-outpainting-guide.vercel.app</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EDUCATION + LANGUAGES in two columns -->
+  <div class="section">
+    <div class="two-col">
+      <div>
+        <div class="slabel">Education &amp; Development</div>
+        <div class="edu-items">
+          <div class="edu-item">
+            <div class="edu-marker"></div>
+            <div>
+              <div class="edu-degree">Bachelor's in Business Management</div>
+              <div class="edu-school">RISEBA University</div>
+              <div class="edu-dates">2004 — 2009</div>
+            </div>
+          </div>
+          <div class="edu-item">
+            <div class="edu-marker"></div>
+            <div>
+              <div class="edu-degree">Self-directed AI Specialisation</div>
+              <div class="edu-school">Kling, Midjourney, Suno, ElevenLabs, n8n, Github etc. — courses, competitions, applied practice</div>
+              <div class="edu-dates">Sep 2024 — Present</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="slabel">Languages</div>
+        <div class="lang-row" style="margin-bottom:16px">
+          <div class="lang-chip"><strong>Russian</strong> Native</div>
+          <div class="lang-chip"><strong>Latvian</strong> Fluent</div>
+          <div class="lang-chip"><strong>English</strong> B2</div>
+        </div>
+        <div class="slabel">Additional</div>
+        <div class="add-row">
+          <span class="add-chip">Based in Riga, Latvia</span>
+          <span class="add-chip">Category B Driver's License</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="section">
+    <p class="footer-note">
+      Before pivoting to AI, <strong>worked in HR for 12 years</strong> across several companies — most recently as HR Business Partner at Accenture Baltics.
+    </p>
+    <a class="hr-btn" href="https://cv-nataliale.vercel.app/" target="_blank">Full HR CV available separately — cv-nataliale.vercel.app</a>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  // Email copy to clipboard
+  const ec = document.getElementById('email-chip');
+  if (ec) {
+    ec.style.cursor = 'pointer';
+    ec.title = 'Click to copy';
+    ec.addEventListener('click', e => {
+      e.preventDefault();
+      navigator.clipboard.writeText('natalja.levaskovica@inbox.lv').then(() => {
+        const s = ec.style.cssText;
+        ec.style.color = '#166534';
+        setTimeout(() => { ec.style.cssText = s; }, 1400);
+      });
+    });
+  }
+
+  // PDF generation with clickable links
+  document.getElementById('btn-pdf').addEventListener('click', function () {
+    const btn = this;
+    btn.textContent = 'Generating…';
+    btn.disabled = true;
+
+    const element = document.querySelector('.page');
+    const printBar = document.querySelector('.print-bar');
+    printBar.style.display = 'none';
+
+    const opt = {
+      margin:       [8, 7, 8, 7],
+      filename:     'Natalja-Levaskovica-AI-CV.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        letterRendering: true
+      },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] },
+      // Enable clickable links
+      enableLinks:  true
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      printBar.style.display = '';
+      btn.textContent = 'Download PDF';
+      btn.disabled = false;
+    });
+  });
+</script>
+</body>
+</html>
