@@ -381,7 +381,8 @@ a { color: inherit; text-decoration: none; }
   body { background: white; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .page { max-width: 100%; box-shadow: none; border-radius: 0; }
   .print-bar { display: none; }
-  .section, .exp-item, .proj-card, .edu-item, .header {
+  .slabel { break-after: avoid; page-break-after: avoid; }
+  .exp-item, .proj-card, .edu-item, .header, .etags, .tgrid, .lang-row {
     page-break-inside: avoid;
     break-inside: avoid;
   }
@@ -656,7 +657,7 @@ a { color: inherit; text-decoration: none; }
         letterRendering: true
       },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] },
+      pagebreak:    { mode: ['css', 'legacy'], avoid: ['.exp-item', '.proj-card', '.edu-item', '.header', '.etags', '.tgrid', '.slabel'] },
       // Enable clickable links
       enableLinks:  true
     };
