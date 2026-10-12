@@ -41,4 +41,4 @@ Example: `index-video.html`, `index-automation.html`, `index-hr-ai.html`
 
 ---
 
-*Last updated June 2026*
+*Last updated October 2026*
